@@ -60,6 +60,7 @@ def get_examples(dataset_name, split, stem, n_shot, variant, data_file, prefix, 
         else:
             examples = load_examples_copa_prefix(f'{stem}copa-{split}.xml', prefix=prefix)
         closed_label_space = False
+        
     elif dataset_name == 'obqa':
         # from data_loaders import load_examples_obqa
         from data_loaders_new import load_examples_obqa_prefix
@@ -70,21 +71,24 @@ def get_examples(dataset_name, split, stem, n_shot, variant, data_file, prefix, 
         else:
             examples = load_examples_obqa_prefix(f'{stem}{split}.jsonl', prefix=prefix)
         closed_label_space = False
+        
     elif dataset_name == 'cqa':
         # prefix = "Deduction:"
-        from data_loaders_new import load_examples_cqa_with_nle, load_examples_cqa, load_examples_cqa_prefix
-        if args.split == 'test':
-            raise NotImplementedError("CSQA does not release test answers directly, please do not spam their leaderboard either :)")
+        from data_loaders_new import load_examples_cqa_with_nle, load_examples_cqa, load_examples_cqa_prefix, load_examples_cqa_mcp
+        # if data_file is not None:
+        #     examples = load_examples_cqa_with_nle(f'{stem}{data_file}.jsonl')
+        # else:
+        # examples = load_examples_cqa(f'{stem}{split}.jsonl')
+        # if kwargs['small'] == True:
+        #     examples = load_examples_cqa_prefix(f'{stem}{split}_small.jsonl', prefix=prefix)
+        # else:
+        if kwargs["mcp"] != "":
+            # apply multiple choice prompt.
+            examples = load_examples_cqa_mcp(f'{stem}{split}.jsonl', mcp=kwargs["mcp"])
         else:
-            if data_file is not None:
-                examples = load_examples_cqa_with_nle(f'{stem}{data_file}.jsonl')
-            else:
-                # examples = load_examples_cqa(f'{stem}{split}.jsonl')
-                if kwargs['small'] == True:
-                    examples = load_examples_cqa_prefix(f'{stem}{split}_small.jsonl', prefix=prefix)
-                else:
-                    examples = load_examples_cqa_prefix(f'{stem}{split}.jsonl', prefix=prefix)
-                
+            # apply prefix, i.e., normal prompt.
+            examples = load_examples_cqa_prefix(f'{stem}{split}.jsonl', prefix=prefix)
+
         closed_label_space = False
     elif dataset_name == "storycloze":
         from data_loaders_new import load_examples_storycloze_prefix
@@ -130,6 +134,7 @@ if __name__ == '__main__':
     parser.add_argument("--do_max_sat", action="store_true", help="Whether to invoke a MaxSAT solver to re-rank predictions.")
     parser.add_argument("--multiple_target_words", action="store_true", help="Enable multiple target words. For closed set tasks, e.g., BoolQ.")
     parser.add_argument("--small", action="store_true", help="Whether to load the small version for tuning hyperparameters.")
+    parser.add_argument("--mcp", type=str, default="", help="Use multiple choice prompt to provide answers in the question.")
     args = parser.parse_args()
     print(args)
 
@@ -148,7 +153,7 @@ if __name__ == '__main__':
         stem = f'data/{args.dataset[:-4]}/'
     else:
         stem = f'data/{args.dataset}/'
-    examples, closed_label_space = get_examples(args.dataset, args.split, stem, args.n_shot, args.variant, args.data_file, args.prefix, multiple_target_words=args.multiple_target_words, small=args.small)
+    examples, closed_label_space = get_examples(args.dataset, args.split, stem, args.n_shot, args.variant, args.data_file, args.prefix, multiple_target_words=args.multiple_target_words, small=args.small, mcp=args.mcp)
     if args.sample:
         assert(args.sample <= len(examples))
         examples = random.sample(examples, args.sample)

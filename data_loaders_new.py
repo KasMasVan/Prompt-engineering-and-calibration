@@ -278,3 +278,26 @@ def load_examples_boolq(path, **kwargs):
         label = 1 if not d['answer'] else 0 #.strip().lower() == 'false' else 1
         examples.append({'options' : options, 'label' : label })
     return examples
+
+def load_examples_cqa_mcp(path, return_tuple=False, mcp=""):
+
+    examples = []
+    with open(path) as f:
+        for line in f:
+            d = json.loads(line)
+            label = ['A','B','C','D','E'].index(d['answerKey'])
+            premise = ' ' +d['question']['stem']
+            ## use the '?' as a bridge
+            if not premise[-1] in '?.!':
+                print(premise)
+            else:
+                premise = premise[:-1] ## trim the punctuation, will add a question mark
+                
+            # options = [ '? {}'.format(c['text'].lower()) for c in d['question']['choices']]
+            options = [c['text'].lower() for c in d['question']['choices']]
+            examples += [{'options': [{'premise': mcp.replace("[answers]", str(options)) + premise.lower() + '? the answer is:' ,
+                                      'hypothesis': ' "{}"'.format(c['text'].lower()),
+                                       'uncond_premise': ' the answer is:',
+                                       'uncond_hypothesis': ' "{}"'.format(c['text'].lower())} for c in d['question']['choices']], 
+                      'label':label}]
+    return examples
