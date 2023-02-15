@@ -82,9 +82,9 @@ def get_examples(dataset_name, split, stem, n_shot, variant, data_file, prefix, 
         # if kwargs['small'] == True:
         #     examples = load_examples_cqa_prefix(f'{stem}{split}_small.jsonl', prefix=prefix)
         # else:
-        if kwargs["mcp"] != "":
+        if kwargs["cond_mcp"] != "" or kwargs["uncond_mcp"] != "" or kwargs["domain_cond"] !="":
             # apply multiple choice prompt.
-            examples = load_examples_cqa_mcp(f'{stem}{split}.jsonl', mcp=kwargs["mcp"])
+            examples = load_examples_cqa_mcp(f'{stem}{split}.jsonl', **kwargs)
         else:
             # apply prefix, i.e., normal prompt.
             examples = load_examples_cqa_prefix(f'{stem}{split}.jsonl', prefix=prefix)
@@ -129,12 +129,14 @@ if __name__ == '__main__':
     parser.add_argument('--key', type=str, default='api.key')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--data_file', type=str, default=None)
+    parser.add_argument('--domain_cond', type=str, default="") # use this with care
     parser.add_argument('--prefix', type=str, default="")
     parser.add_argument("--reweight", type=float, default=1.0)
     parser.add_argument("--do_max_sat", action="store_true", help="Whether to invoke a MaxSAT solver to re-rank predictions.")
     parser.add_argument("--multiple_target_words", action="store_true", help="Enable multiple target words. For closed set tasks, e.g., BoolQ.")
     parser.add_argument("--small", action="store_true", help="Whether to load the small version for tuning hyperparameters.")
-    parser.add_argument("--mcp", type=str, default="", help="Use multiple choice prompt to provide answers in the question.")
+    parser.add_argument("--cond_mcp", type=str, default="", help="Multiple choice prompt for conditional premesis.")
+    parser.add_argument("--uncond_mcp", type=str, default="", help="Multiple choice prompt for unconditional premesis.")
     args = parser.parse_args()
     print(args)
 
@@ -153,7 +155,7 @@ if __name__ == '__main__':
         stem = f'data/{args.dataset[:-4]}/'
     else:
         stem = f'data/{args.dataset}/'
-    examples, closed_label_space = get_examples(args.dataset, args.split, stem, args.n_shot, args.variant, args.data_file, args.prefix, multiple_target_words=args.multiple_target_words, small=args.small, mcp=args.mcp)
+    examples, closed_label_space = get_examples(args.dataset, args.split, stem, args.n_shot, args.variant, args.data_file, args.prefix, multiple_target_words=args.multiple_target_words, small=args.small, cond_mcp=args.cond_mcp, uncond_mcp=args.uncond_mcp, domain_cond=args.domain_cond)
     if args.sample:
         assert(args.sample <= len(examples))
         examples = random.sample(examples, args.sample)

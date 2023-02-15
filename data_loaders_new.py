@@ -279,8 +279,14 @@ def load_examples_boolq(path, **kwargs):
         examples.append({'options' : options, 'label' : label })
     return examples
 
-def load_examples_cqa_mcp(path, return_tuple=False, mcp=""):
-
+# def load_examples_cqa_mcp(path, return_tuple=False, cond_mcp="", uncond_mcp=""):
+def load_examples_cqa_mcp(path, return_tuple=False, **kwargs):
+    cond_mcp, uncond_mcp = kwargs['cond_mcp'], kwargs['uncond_mcp']
+    if kwargs['domain_cond'] == "":
+        domain_cond = " the answer is:"
+    else:
+        domain_cond = kwargs['domain_cond']
+    
     examples = []
     with open(path) as f:
         for line in f:
@@ -295,9 +301,9 @@ def load_examples_cqa_mcp(path, return_tuple=False, mcp=""):
                 
             # options = [ '? {}'.format(c['text'].lower()) for c in d['question']['choices']]
             options = [c['text'].lower() for c in d['question']['choices']]
-            examples += [{'options': [{'premise': mcp.replace("[answers]", str(options)) + premise.lower() + '? the answer is:' ,
+            examples += [{'options': [{'premise': cond_mcp.replace("[answers]", str(options)) + premise.lower() + '?' + domain_cond ,
                                       'hypothesis': ' "{}"'.format(c['text'].lower()),
-                                       'uncond_premise': mcp.replace("[answers]", str(options)) + ' the answer is:',
+                                       'uncond_premise': uncond_mcp.replace("[answers]", str(options)) + domain_cond,
                                        'uncond_hypothesis': ' "{}"'.format(c['text'].lower())} for c in d['question']['choices']], 
                       'label':label}]
     return examples
