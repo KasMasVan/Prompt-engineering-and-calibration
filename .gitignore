@@ -1,0 +1,13 @@
+# ignore data
+data/
+
+#ignore results
+results/
+
+#ignore models
+models/
+
+#ignore this
+.ipynb_checkpoints/
+__pycache__/
+
