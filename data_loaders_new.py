@@ -297,7 +297,7 @@ def load_examples_cqa_mcp(path, return_tuple=False, mcp=""):
             options = [c['text'].lower() for c in d['question']['choices']]
             examples += [{'options': [{'premise': mcp.replace("[answers]", str(options)) + premise.lower() + '? the answer is:' ,
                                       'hypothesis': ' "{}"'.format(c['text'].lower()),
-                                       'uncond_premise': ' the answer is:',
+                                       'uncond_premise': mcp.replace("[answers]", str(options)) + ' the answer is:',
                                        'uncond_hypothesis': ' "{}"'.format(c['text'].lower())} for c in d['question']['choices']], 
                       'label':label}]
     return examples
