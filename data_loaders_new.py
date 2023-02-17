@@ -279,8 +279,7 @@ def load_examples_boolq(path, **kwargs):
         examples.append({'options' : options, 'label' : label })
     return examples
 
-# def load_examples_cqa_mcp(path, return_tuple=False, cond_mcp="", uncond_mcp=""):
-def load_examples_cqa_mcp(path, return_tuple=False, **kwargs):
+def load_examples_cqa_mcp(path, **kwargs):
     cond_mcp, uncond_mcp = kwargs['cond_mcp'], kwargs['uncond_mcp']
     if kwargs['domain_cond'] == "":
         domain_cond = " the answer is:"
@@ -299,11 +298,97 @@ def load_examples_cqa_mcp(path, return_tuple=False, **kwargs):
             else:
                 premise = premise[:-1] ## trim the punctuation, will add a question mark
                 
-            # options = [ '? {}'.format(c['text'].lower()) for c in d['question']['choices']]
             options = [c['text'].lower() for c in d['question']['choices']]
             examples += [{'options': [{'premise': cond_mcp.replace("[answers]", str(options)) + premise.lower() + '?' + domain_cond ,
                                       'hypothesis': ' "{}"'.format(c['text'].lower()),
                                        'uncond_premise': uncond_mcp.replace("[answers]", str(options)) + domain_cond,
                                        'uncond_hypothesis': ' "{}"'.format(c['text'].lower())} for c in d['question']['choices']], 
                       'label':label}]
+    return examples
+
+def load_examples_copa_mcp(path, **kwargs):
+    cond_mcp, uncond_mcp, domain_cond = kwargs['cond_mcp'], kwargs['uncond_mcp'], kwargs['domain_cond']
+    
+    root = ET.parse(path).getroot()
+    examples_copa = []
+    for type_tag in root.findall('item'):
+        # xml stuff
+        value = type_tag.get('most-plausible-alternative')
+        asks_for = type_tag.get('asks-for')
+        children = list(type_tag)
+        # get the texts
+        p = children[0].text
+        a1 = children[1].text[:1].lower() +  children[1].text[1:]
+        a2 = children[2].text[:1].lower() +  children[2].text[1:]
+        options = [a1, a2]
+        if asks_for =='effect':
+            bridge = ' so'
+        elif asks_for =='cause':
+            bridge = ' because'
+        else: 
+            assert(False)
+            
+        examples_copa  += [{'options': [{'premise':' '+ cond_mcp.replace("[answers]", str(options)) + p[:-1] + bridge + '.' + domain_cond,
+                                         'hypothesis': ' '+ a1,
+                                         'uncond_premise':uncond_mcp.replace("[answers]", str(options)) + bridge + '.' + domain_cond,
+                                         'uncond_hypothesis':' '+a1},
+                                       {'premise':' '+ cond_mcp.replace("[answers]", str(options)) + p[:-1] + bridge + '.' + domain_cond,
+                                         'hypothesis': ' '+a2,
+                                         'uncond_premise':uncond_mcp.replace("[answers]", str(options)) + bridge + '.' + domain_cond,
+                                         'uncond_hypothesis':' '+a2}], 
+                  'label':int(value)-1}]
+    return examples_copa
+
+'''
+
+This loads COPA, putting hypothesis before the premise
+
+(so forward LM score is PMI)
+
+'''
+
+def load_examples_obqa_mcp(path, **kwargs):
+    cond_mcp, uncond_mcp, domain_cond = kwargs['cond_mcp'], kwargs['uncond_mcp'], kwargs['domain_cond']
+    with open(path) as lines:
+        idx2abc = { 0 : 'A', 1 : 'B', 2 : 'C', 3 : 'D' }
+        abc2idx = { 'A' : 0, 'B' : 1, 'C' : 2, 'D' : 3 }
+
+        examples = []
+        for line in lines:
+            j = json.loads(line)
+            d = {}
+
+            label = j['answerKey']
+            correct_hypothesis = abc2idx[label]
+            q = j['question']
+            stem = q['stem']
+            choices = q['choices']
+            hypotheses = []
+            for idx, choice in enumerate(choices):
+                text = choice['text']
+                label = choice['label']
+                assert(abc2idx[label] == idx)
+                hypotheses.append(text)
+
+            d['premise'] = stem
+            d['hypotheses'] = hypotheses
+            d['correct_hypothesis'] = correct_hypothesis
+
+            d['stem'] = stem
+            d['answers'] = choices
+            d['label'] = label
+
+            premise = d['premise']
+            options = []
+            # anaswers = d['hypotheses']
+            for h in d['hypotheses']:
+                o = {}
+                h = ' ' + h
+                o['premise'] = cond_mcp.replace("[answers]", str(hypotheses)) + premise + '.' + domain_cond
+                o['hypothesis'] = h
+                o['uncond_premise'] = uncond_mcp.replace("[answers]", str(hypotheses)) + domain_cond # + ' the answer is:'
+                o['uncond_hypothesis'] = h
+                options.append(o)
+            label = d['correct_hypothesis']
+            examples.append({'options' : options, 'label' : label })
     return examples

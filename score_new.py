@@ -51,37 +51,23 @@ def get_model(model_name, key_file):
 
 def get_examples(dataset_name, split, stem, n_shot, variant, data_file, prefix, **kwargs):
     if dataset_name == 'copa':
-        # from data_loaders import load_examples_copa
-        from data_loaders_new import load_examples_copa_prefix
-        # examples = load_examples_copa(f'{stem}copa-{split}.xml')
-        # prefix = "Therefore,"
-        if kwargs['small'] == True:
-            examples = load_examples_copa_prefix(f'{stem}copa-{split}_small.xml', prefix=prefix)
+        from data_loaders_new import load_examples_copa_prefix, load_examples_copa_mcp
+        if kwargs["cond_mcp"] != "" or kwargs["uncond_mcp"] != "" or kwargs["domain_cond"] !="":
+            examples = load_examples_copa_mcp(f'{stem}copa-{split}.xml', **kwargs)
         else:
             examples = load_examples_copa_prefix(f'{stem}copa-{split}.xml', prefix=prefix)
         closed_label_space = False
         
     elif dataset_name == 'obqa':
-        # from data_loaders import load_examples_obqa
-        from data_loaders_new import load_examples_obqa_prefix
-        # examples = load_examples_obqa(f'{stem}{split}.jsonl')
-        # prefix="Obviously, "
-        if kwargs['small'] == True:
-            examples = load_examples_obqa_prefix(f'{stem}{split}_small.jsonl', prefix=prefix)
+        from data_loaders_new import load_examples_obqa_prefix, load_examples_obqa_mcp
+        if kwargs["cond_mcp"] != "" or kwargs["uncond_mcp"] != "" or kwargs["domain_cond"] !="":
+            examples = load_examples_obqa_mcp(f'{stem}{split}.jsonl', **kwargs)
         else:
             examples = load_examples_obqa_prefix(f'{stem}{split}.jsonl', prefix=prefix)
         closed_label_space = False
         
     elif dataset_name == 'cqa':
-        # prefix = "Deduction:"
         from data_loaders_new import load_examples_cqa_with_nle, load_examples_cqa, load_examples_cqa_prefix, load_examples_cqa_mcp
-        # if data_file is not None:
-        #     examples = load_examples_cqa_with_nle(f'{stem}{data_file}.jsonl')
-        # else:
-        # examples = load_examples_cqa(f'{stem}{split}.jsonl')
-        # if kwargs['small'] == True:
-        #     examples = load_examples_cqa_prefix(f'{stem}{split}_small.jsonl', prefix=prefix)
-        # else:
         if kwargs["cond_mcp"] != "" or kwargs["uncond_mcp"] != "" or kwargs["domain_cond"] !="":
             # apply multiple choice prompt.
             examples = load_examples_cqa_mcp(f'{stem}{split}.jsonl', **kwargs)
