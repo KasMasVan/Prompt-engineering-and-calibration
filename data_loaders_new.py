@@ -392,3 +392,56 @@ def load_examples_obqa_mcp(path, **kwargs):
             label = d['correct_hypothesis']
             examples.append({'options' : options, 'label' : label })
     return examples
+
+def load_examples_piqa_mcp(qa_path, label_path, **kwargs):
+    cond_mcp, uncond_mcp, domain_cond = kwargs['cond_mcp'], kwargs['uncond_mcp'], kwargs['domain_cond'] #" The answer is: "
+    if domain_cond == '':
+        domain_cond = " The answer is: "
+
+    examples = []
+    with open(qa_path) as lines, open(label_path) as labels:
+        for line, label in zip(lines, labels):
+            example = {}
+            example['label'] = int(label[0])
+
+            line = json.loads(line)
+            options = []
+            all_sol= [line['sol1'], line['sol2']]
+            for key in ['sol1', 'sol2']:
+                option = {}
+                option['hypothesis'] = line[key]
+                option['premise'] = cond_mcp.replace("[answers]", str(all_sol)) + line['goal'] + domain_cond
+                option['uncond_hypothesis'] = line[key]
+                option['uncond_premise'] = uncond_mcp.replace("[answers]", str(all_sol)) + domain_cond
+                options.append(option)
+            example['options'] = options
+            examples.append(example)
+    
+    return examples
+
+def load_examples_siqa_mcp(qa_path, label_path, **kwargs):
+    cond_mcp, uncond_mcp, domain_cond = kwargs['cond_mcp'], kwargs['uncond_mcp'], kwargs['domain_cond'] #" The answer is: "
+    
+    if domain_cond == '':
+        domain_cond = " The answer is: "
+
+    examples = []
+    with open(qa_path) as lines, open(label_path) as labels:
+        for line, label in zip(lines, labels):
+            example = {}
+            example['label'] = int(label[0])
+
+            line = json.loads(line)
+            options = []
+            all_sol= [line['answerA'], line['answerB'], line['answerC']]
+            for key in ['answerA', 'answerB', 'answerC']:
+                option = {}
+                option['hypothesis'] = line[key]
+                option['premise'] = cond_mcp.replace("[answers]", str(all_sol)) + line['context'] + ' ' + line['question'] + domain_cond
+                option['uncond_hypothesis'] = line[key]
+                option['uncond_premise'] = uncond_mcp.replace("[answers]", str(all_sol)) + domain_cond
+                options.append(option)
+            example['options'] = options
+            examples.append(example)
+    
+    return examples

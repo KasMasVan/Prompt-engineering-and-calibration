@@ -49,3 +49,30 @@ wget https://s3.amazonaws.com/commensenseqa/dev_rand_split.jsonl -O dev.jsonl
 ```
 
 or simply use `bash data_downloaders/cqa.sh`
+
+### Social IQa
+
+The official website of Social IQa is https://leaderboard.allenai.org/socialiqa/submissions/get-started You can download the validation file using:
+
+```
+mkdir data/siqa/
+cd data/siqa/
+wget https://storage.googleapis.com/ai2-mosaic/public/socialiqa/socialiqa-train-dev.zip
+unzip socialiqa-train-dev.zip
+cp socialiqa-train-dev/dev* .
+```
+
+or simply use `bash data_downloaders/siqa.sh`
+
+### Physical Interaction: Question Answering
+
+The official website of Physical Interaction: Question Answering is https://yonatanbisk.com/piqa/data/ You can download the validation file using:
+
+```
+mkdir data/piqa/
+cd data/piqa/
+wget https://yonatanbisk.com/piqa/data/valid.jsonl
+wget https://yonatanbisk.com/piqa/data/valid-labels.lst
+```
+
+or simply use `bash data_downloaders/piqa.sh`

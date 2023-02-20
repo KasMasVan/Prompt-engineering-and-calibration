@@ -85,6 +85,15 @@ def get_examples(dataset_name, split, stem, n_shot, variant, data_file, prefix, 
         examples = load_examples_boolq(f'{stem}dev.jsonl', **kwargs)
         closed_label_space = True
     
+    elif dataset_name == 'piqa':
+        from data_loaders_new import load_examples_piqa_mcp
+        examples = load_examples_piqa_mcp(f'{stem}valid.jsonl', f'{stem}valid-labels.lst', **kwargs)
+        closed_label_space = False
+    elif dataset_name == 'siqa':
+        from data_loaders_new import load_examples_siqa_mcp
+        examples = load_examples_siqa_mcp(f'{stem}dev.jsonl', f'{stem}dev-labels.lst', **kwargs)
+        closed_label_space = False
+    
     return examples, closed_label_space
 
 
