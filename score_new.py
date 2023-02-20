@@ -165,20 +165,30 @@ if __name__ == '__main__':
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     with open(save_path, 'a') as f:
         print(args, file=f)
-        if len(args.prefix) == 0:
-            # reweighting only
-            for key, value in accs.items():
-                if "DC_a" not in key:
-                    print(key, value)
-                    print(key, value, file=f)
+        # if len(args.prefix) == 0:
+        #     # reweighting only
+        #     for key, value in accs.items():
+        #         if "DC_a" not in key:
+        #             print(key, value)
+        #             print(key, value, file=f)
+        # else:
+        #     # reweighitng + prefixing
+        #     key_1 = 'PMI_a'
+        #     key_2 = 'PMI_DC_a'
+        #     key_3 = 'PMI_DC'
+        #     print('PMI_PR', accs[key_1])
+        #     print('PMI_PR', accs[key_1], file=f)
+        #     print('PMI_DC_prefix', accs[key_3])
+        #     print('PMI_DC_prefix', accs[key_3], file=f)
+        #     print("PMI_DC_PR", accs[key_2])
+        #     print("PMI_DC_PR", accs[key_2], file=f)
+        if args.cond_mcp == "":
+            print("ZS", accs['LM'])
+            print("ZS", accs['LM'], file=f)
+            print("CA", accs['PMI_DC'])
+            print("CA", accs['PMI_DC'], file=f)
         else:
-            # reweighitng + prefixing
-            key_1 = 'PMI_a'
-            key_2 = 'PMI_DC_a'
-            key_3 = 'PMI_DC'
-            print('PMI_PR', accs[key_1])
-            print('PMI_PR', accs[key_1], file=f)
-            print('PMI_DC_prefix', accs[key_3])
-            print('PMI_DC_prefix', accs[key_3], file=f)
-            print("PMI_DC_PR", accs[key_2])
-            print("PMI_DC_PR", accs[key_2], file=f)
+            print("PE", accs['LM'])
+            print("PE", accs['LM'], file=f)
+            print("FULL", accs['PMI_DC'])
+            print("FULL", accs['PMI_DC'], file=f)
