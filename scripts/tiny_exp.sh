@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# python score_new.py piqa \
+# python score_new.py siqa \
 # --model gpt2 \
 # --cond_mcp "Given answers in square brackets [], choose the one that best completes the sentence. Answers: [answers]. Sentence: " \
 # --uncond_mcp "Given answers in square brackets []. choose the best one. Answers: [answers]." \
@@ -9,7 +9,7 @@
     
     
 
-for model in 't5-small' 't5-base' 't5-large' "gpt2" "m" "l" "xl" "google/flan-t5-small" "google/flan-t5-base" "google/flan-t5-large" "google/flan-t5-xl"
+for model in "google/flan-t5-small" "google/flan-t5-base" "google/flan-t5-large" "google/flan-t5-xl" 't5-small' 't5-base' 't5-large' "gpt2" "m" "l" "xl" 
 do
     # baseline
     python score_new.py cqa --model $model
@@ -18,7 +18,7 @@ do
     python score_new.py piqa --model $model
     python score_new.py siqa --model $model
     
-    # mcp
+    # # mcp
     python score_new.py cqa \
     --model $model \
     --cond_mcp "Given answers in square brackets [], choose the best for the question. Answers: [answers]. Question: " \

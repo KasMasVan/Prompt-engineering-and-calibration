@@ -429,7 +429,7 @@ def load_examples_siqa_mcp(qa_path, label_path, **kwargs):
     with open(qa_path) as lines, open(label_path) as labels:
         for line, label in zip(lines, labels):
             example = {}
-            example['label'] = int(label[0])
+            example['label'] = int(label[0]) - 1 # This took me at least an hour to figure out.
 
             line = json.loads(line)
             options = []
