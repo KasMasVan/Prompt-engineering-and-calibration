@@ -4,7 +4,7 @@ Here we include instructions for downloading each dataset, for maximum reproduci
 
 ## Directory Structure
 
-The location of datasets is hard-coded in `score_new.py`; this is a feature, not a bug, because it is easy to lose track of which data files have what in them. All datasets are stored in `data/<dataset_name>/`. To apply to a new dataset, add a data loader to `data_loaders.py` and add a couple lines of logic code to `score_new.py`.
+The location of datasets is hard-coded in `score_new.py`; this is a feature, not a bug, because it is easy to lose track of which data files have what in them. All datasets are stored in `data/<dataset_name>/`. To apply to a new dataset, add a data loader to `data_loaders_new.py` and add a couple lines of logic code to `score_new.py`.
 
 ## Datasets
 

@@ -7,7 +7,15 @@ results/
 #ignore models
 models/
 
+#ignore unnecessary scripts and notebooks
+*.ipynb
+*.sh
+!scripts/download_models.ipynb
+!scripts/tiny_exp.sh
+
 #ignore this
 .ipynb_checkpoints/
 __pycache__/
+api.key
+nle.py
 

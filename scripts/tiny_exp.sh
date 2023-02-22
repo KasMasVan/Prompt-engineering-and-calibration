@@ -1,13 +1,4 @@
-#!/bin/bash
-
-# python score_new.py siqa \
-# --model gpt2 \
-# --cond_mcp "Given answers in square brackets [], choose the one that best completes the sentence. Answers: [answers]. Sentence: " \
-# --uncond_mcp "Given answers in square brackets []. choose the best one. Answers: [answers]." \
-# --domain_cond " The best completion is: " \
-    
-    
-    
+#!/bin/bash    
 
 for model in "google/flan-t5-small" "google/flan-t5-base" "google/flan-t5-large" "google/flan-t5-xl" 't5-small' 't5-base' 't5-large' "gpt2" "m" "l" "xl" 
 do
