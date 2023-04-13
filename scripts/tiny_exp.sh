@@ -1,6 +1,7 @@
 #!/bin/bash    
 
-for model in "google/flan-t5-small" "google/flan-t5-base" "google/flan-t5-large" "google/flan-t5-xl" 't5-small' 't5-base' 't5-large' "gpt2" "m" "l" "xl" 
+# for model in "google/flan-t5-small" "google/flan-t5-base" "google/flan-t5-large" "google/flan-t5-xl" 't5-small' 't5-base' 't5-large' "gpt2" "m" "l" "xl" 
+for model in "google/flan-t5-small" "google/flan-t5-base" 't5-small' 't5-base' "gpt2" "m"
 do
     # baseline
     python score_new.py cqa --model $model
