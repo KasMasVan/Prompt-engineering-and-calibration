@@ -17,10 +17,16 @@ mkdir data
 You can go through `scripts/download_models.ipynb` to download models to `models/`.
 
 ## Reproducing Results
-You can reproduce results from our paper by running following scripts:
+You can reproduce results from our paper by running following script:
 
 ```
 bash ./scripts/tiny_exp.sh
 ```
+
+To compare multiple choice prompts with and without symbols, e.g., A, B, you can run the following script:
+```
+bash ./scripts/sym.sh
+```
+
 If there is any confusion, simply look in `score_new.py` to see the details.
 You can check the output from either the terminal or text files under `/results`.

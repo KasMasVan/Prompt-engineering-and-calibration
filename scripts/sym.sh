@@ -15,7 +15,7 @@ do
     for dataset_1 in "${datasets_1[@]}"
     do
         # baseline
-        # python score_new.py ${dataset_1} --model $model
+        python score_new.py ${dataset_1} --model $model
         
         # mcp w/o symbol
         python score_new.py ${dataset_1} \
