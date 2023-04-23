@@ -132,6 +132,7 @@ if __name__ == '__main__':
     parser.add_argument("--small", action="store_true", help="Whether to load the small version for tuning hyperparameters.")
     parser.add_argument("--cond_mcp", type=str, default="", help="Multiple choice prompt for conditional premesis.")
     parser.add_argument("--uncond_mcp", type=str, default="", help="Multiple choice prompt for unconditional premesis.")
+    parser.add_argument("--with_symbol", action="store_true", help="When using mcp, whether to add a symbol, e.g., A for each option, and score based on the symbol instead of actual text.")
     args = parser.parse_args()
     print(args)
 
@@ -150,7 +151,7 @@ if __name__ == '__main__':
         stem = f'data/{args.dataset[:-4]}/'
     else:
         stem = f'data/{args.dataset}/'
-    examples, closed_label_space = get_examples(args.dataset, args.split, stem, args.n_shot, args.variant, args.data_file, args.prefix, multiple_target_words=args.multiple_target_words, small=args.small, cond_mcp=args.cond_mcp, uncond_mcp=args.uncond_mcp, domain_cond=args.domain_cond)
+    examples, closed_label_space = get_examples(args.dataset, args.split, stem, args.n_shot, args.variant, args.data_file, args.prefix, multiple_target_words=args.multiple_target_words, small=args.small, cond_mcp=args.cond_mcp, uncond_mcp=args.uncond_mcp, domain_cond=args.domain_cond, with_symbol=args.with_symbol)
     if args.sample:
         assert(args.sample <= len(examples))
         examples = random.sample(examples, args.sample)

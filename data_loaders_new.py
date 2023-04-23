@@ -297,12 +297,20 @@ def load_examples_cqa_mcp(path, **kwargs):
                 print(premise)
             else:
                 premise = premise[:-1] ## trim the punctuation, will add a question mark
-                
+            
             options = [c['text'].lower() for c in d['question']['choices']]
-            examples += [{'options': [{'premise': cond_mcp.replace("[answers]", str(options)) + premise.lower() + '?' + domain_cond ,
-                                      'hypothesis': ' "{}"'.format(c['text'].lower()),
+            if kwargs['with_symbol'] == True:
+                options = [f"{char}. {option}" for char, option in zip(['A','B','C','D','E'], options)]
+                examples += [{'options': [{'premise': cond_mcp.replace("[answers]", str(options)) + premise.lower() + '?' + domain_cond ,
+                                'hypothesis': ' "{}"'.format(char),
+                                'uncond_premise': uncond_mcp.replace("[answers]", str(options)) + domain_cond,
+                                'uncond_hypothesis': ' "{}"'.format(char)} for char, option in zip(['A','B','C','D','E'], options)], 
+                                'label':label}]
+            else:
+                examples += [{'options': [{'premise': cond_mcp.replace("[answers]", str(options)) + premise.lower() + '?' + domain_cond ,
+                                      'hypothesis': ' "{}"'.format(option),
                                        'uncond_premise': uncond_mcp.replace("[answers]", str(options)) + domain_cond,
-                                       'uncond_hypothesis': ' "{}"'.format(c['text'].lower())} for c in d['question']['choices']], 
+                                       'uncond_hypothesis': ' "{}"'.format(option)} for option in options], 
                       'label':label}]
     return examples
 
