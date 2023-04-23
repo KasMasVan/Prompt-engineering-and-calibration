@@ -31,8 +31,11 @@ def get_model(model_name, key_file):
         encoder = AutoTokenizer.from_pretrained(f"./models/{model_name}")
         name = "T5"
     elif model_name in ['google/flan-t5-small', 'google/flan-t5-base', 'google/flan-t5-large', 'google/flan-t5-xl', 'google/flan-t5-xxl']:
-        model = AutoModelForSeq2SeqLM.from_pretrained(f"./models/{model_name}")
-        encoder = AutoTokenizer.from_pretrained(f"./models/{model_name}")
+        # model = AutoModelForSeq2SeqLM.from_pretrained(f"./models/{model_name}")
+        
+        # encoder = AutoTokenizer.from_pretrained(f"./models/{model_name}")
+        model = AutoModelForSeq2SeqLM.from_pretrained(f"../csr_exp_resource_index/models/FLAN-T5/{model_name}")
+        encoder = AutoTokenizer.from_pretrained(f"../csr_exp_resource_index/models/FLAN-T5/{model_name}")
         name = "Flan-T5"
     elif model_name.lower() == 'ada' or \
          model_name.lower() == 'babbage' or \
