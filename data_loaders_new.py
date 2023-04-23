@@ -441,12 +441,23 @@ def load_examples_siqa_mcp(qa_path, label_path, **kwargs):
 
             line = json.loads(line)
             options = []
-            all_sol= [line['answerA'], line['answerB'], line['answerC']]
-            for key in ['answerA', 'answerB', 'answerC']:
+            
+            if kwargs['with_symbol'] == True:
+                all_sol = [f"A. {line['answerA']}", f"B. {line['answerB']}", f"C. {line['answerC']}"]
+            else:
+                all_sol = [line['answerA'], line['answerB'], line['answerC']]
+            
+            for key, char in zip(['answerA', 'answerB', 'answerC'], ['A', 'B', 'C']):
                 option = {}
-                option['hypothesis'] = line[key]
+                
+                if kwargs["with_symbol"] == True:
+                    option['hypothesis'] = f"{char}"
+                    option['uncond_hypothesis'] = f"{char}"
+                else:
+                    option['hypothesis'] = line[key]
+                    option['uncond_hypothesis'] = line[key]
+
                 option['premise'] = cond_mcp.replace("[answers]", str(all_sol)) + line['context'] + ' ' + line['question'] + domain_cond
-                option['uncond_hypothesis'] = line[key]
                 option['uncond_premise'] = uncond_mcp.replace("[answers]", str(all_sol)) + domain_cond
                 options.append(option)
             example['options'] = options
