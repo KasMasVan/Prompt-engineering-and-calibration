@@ -1,6 +1,6 @@
 #!/bin/bash
-# models=("google/flan-t5-small" "google/flan-t5-base" "google/flan-t5-large" "google/flan-t5-xl" 't5-small' 't5-base' 't5-large' "gpt2" "m" "l" "xl" )
-models=("gpt2" "m" "l" "xl")
+models=("google/flan-t5-small" "google/flan-t5-base" "google/flan-t5-large" "google/flan-t5-xl" 't5-small' 't5-base' 't5-large' "gpt2" "m" "l" "xl" )
+# models=("gpt2" "m" "l" "xl")
 datasets_1=("cqa" "siqa")
 # datasets_2=("copa" "obqa" "piqa")
 cond_mcp_1="Given answers in square brackets [], choose the best for the question. Answers: [answers]. Question: "

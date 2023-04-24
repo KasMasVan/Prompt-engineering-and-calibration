@@ -9,8 +9,8 @@ import time
 import os
 import re
 
-from pysat.examples.rc2 import RC2
-from pysat.formula import WCNF
+# from pysat.examples.rc2 import RC2
+# from pysat.formula import WCNF
 from itertools import (
     combinations, 
     product,)

@@ -1,41 +1,56 @@
 def get_model(model_name, key_file):
     if model_name.lower() in ['gpt2', 'gpt2-s', 'gpt2-small', 'gs', 's', 'small']:
         # GPT-2 Small
-        model   = GPT2LMHeadModel.from_pretrained('./models/gpt2').cuda(0).eval()
-        encoder = GPT2Tokenizer.from_pretrained('./models/gpt2')
+        # model   = GPT2LMHeadModel.from_pretrained('./models/gpt2').cuda(0).eval()
+        # encoder = GPT2Tokenizer.from_pretrained('./models/gpt2')
+        ckpt_dir = f"../csr_exp_resource_index/models/GPT2"
+        model   = GPT2LMHeadModel.from_pretrained(f'{ckpt_dir}/gpt2').cuda(0).eval()
+        encoder = GPT2Tokenizer.from_pretrained(f'{ckpt_dir}/gpt2')
         name    = 'G-S'
     elif model_name.lower() in ['gpt2-m', 'gpt2-medium', 'gm', 'm', 'medium']:
         # GPT-2 Medium
-        model   = GPT2LMHeadModel.from_pretrained('./models/gpt2-medium').cuda(0).eval()
-        encoder = GPT2Tokenizer.from_pretrained('./models/gpt2-medium')
+        # model   = GPT2LMHeadModel.from_pretrained('./models/gpt2-medium').cuda(0).eval()
+        # encoder = GPT2Tokenizer.from_pretrained('./models/gpt2-medium')
+        ckpt_dir = f"../csr_exp_resource_index/models/GPT2"
+        model   = GPT2LMHeadModel.from_pretrained(f'{ckpt_dir}/gpt2-medium').cuda(0).eval()
+        encoder = GPT2Tokenizer.from_pretrained(f'{ckpt_dir}/gpt2-medium')
         name    = 'G-M'
     elif model_name.lower() in ['gpt2-l', 'gpt2-large', 'gl', 'l', 'large']:
         # GPT-2 Large
-        model   = GPT2LMHeadModel.from_pretrained('./models/gpt2-large').cuda(0).eval()
-        encoder = GPT2Tokenizer.from_pretrained('./models/gpt2-large')
+        # model   = GPT2LMHeadModel.from_pretrained('./models/gpt2-large').cuda(0).eval()
+        # encoder = GPT2Tokenizer.from_pretrained('./models/gpt2-large')
+        ckpt_dir = f"../csr_exp_resource_index/models/GPT2"
+        model   = GPT2LMHeadModel.from_pretrained(f'{ckpt_dir}/gpt2-large').cuda(0).eval()
+        encoder = GPT2Tokenizer.from_pretrained(f'{ckpt_dir}/gpt2-large')
         name    = 'G-L'
     elif model_name.lower() in ['gpt2-xl', 'gxl', 'xl', 'extra-large']:
         # GPT-2 XL
-        model   = GPT2LMHeadModel.from_pretrained('./models/gpt2-xl').cuda(0).eval()
-        encoder = GPT2Tokenizer.from_pretrained('./models/gpt2-xl')
+        # model   = GPT2LMHeadModel.from_pretrained('./models/gpt2-xl').cuda(0).eval()
+        # encoder = GPT2Tokenizer.from_pretrained('./models/gpt2-xl')
+        ckpt_dir = f"../csr_exp_resource_index/models/GPT2"
+        model   = GPT2LMHeadModel.from_pretrained(f'{ckpt_dir}/gpt2-xl').cuda(0).eval()
+        encoder = GPT2Tokenizer.from_pretrained(f'{ckpt_dir}/gpt2-xl')
         name    = 'G-XL'
     elif "gpt-neo" in model_name:
         # "EleutherAI/gpt-neo-125M"
         # "EleutherAI/gpt-neo-1.3B"
         # "EleutherAI/gpt-neo-2.7B"
-        model = AutoModelForCausalLM.from_pretrained(f"./models/{model_name}")
+        model = AutoModelForCausalLM.from_pretrained(f"./models/{model_name}").cuda(0).eval()
         encoder = AutoTokenizer.from_pretrained(f"./models/{model_name}")
         name = "GPT-Neo"
     elif model_name in ['t5-small', 't5-base', 't5-large', 't5-3b', 't5-11b']:
-        model = AutoModelForSeq2SeqLM.from_pretrained(f"./models/{model_name}")
-        encoder = AutoTokenizer.from_pretrained(f"./models/{model_name}")
+        # model = AutoModelForSeq2SeqLM.from_pretrained(f"./models/{model_name}").cuda(0).eval()
+        # encoder = AutoTokenizer.from_pretrained(f"./models/{model_name}")
+        ckpt_path = f"../csr_exp_resource_index/models/T5/{model_name}"
+        model = AutoModelForSeq2SeqLM.from_pretrained(ckpt_path).cuda(0).eval()
+        encoder = AutoTokenizer.from_pretrained(ckpt_path)
         name = "T5"
     elif model_name in ['google/flan-t5-small', 'google/flan-t5-base', 'google/flan-t5-large', 'google/flan-t5-xl', 'google/flan-t5-xxl']:
-        # model = AutoModelForSeq2SeqLM.from_pretrained(f"./models/{model_name}")
-        
+        # model = AutoModelForSeq2SeqLM.from_pretrained(f"./models/{model_name}").cuda(0).eval()
         # encoder = AutoTokenizer.from_pretrained(f"./models/{model_name}")
-        model = AutoModelForSeq2SeqLM.from_pretrained(f"../csr_exp_resource_index/models/FLAN-T5/{model_name}")
-        encoder = AutoTokenizer.from_pretrained(f"../csr_exp_resource_index/models/FLAN-T5/{model_name}")
+        ckpt_path = f"../csr_exp_resource_index/models/FLAN-T5/{model_name}"
+        model = AutoModelForSeq2SeqLM.from_pretrained(ckpt_path).cuda(0).eval()
+        encoder = AutoTokenizer.from_pretrained(ckpt_path)
         name = "Flan-T5"
     elif model_name.lower() == 'ada' or \
          model_name.lower() == 'babbage' or \
