@@ -1,4 +1,8 @@
-Our code is based on code for the paper ["Surface Form Competition: Why the Highest Probability Answer Isn't Always Right"](https://peterwestuw.github.io/surface-form-competition-project/)
+# Prompt Engineering and Calibration for Zero-Shot Commonsense Reasoning
+
+This is the official repo for our ICLR 2023 Tiny paper: [Prompt Engineering and Calibration for Zero-Shot Commonsense Reasoning](https://openreview.net/forum?id=3EfxJTp_-Cj).
+
+Our code is based on code for the paper [Surface Form Competition: Why the Highest Probability Answer Isn't Always Right](https://peterwestuw.github.io/surface-form-competition-project/).
 
 ## Dependencies
 We use python3 and pytorch 1.7.0, but we do not use cutting-edge features from either and expect to be largely forward and backward compatible. That is not a guarantee or promise.
